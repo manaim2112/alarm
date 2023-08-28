@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <link rel="stylesheet" href="styles.css" /> -->
+    <link rel="stylesheet" href="main.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tauri App</title>
+    <script type="module" src="/main.js" defer></script>
+    <script src="/compress.js"></script>
+    <style>
+      .logo.vanilla:hover {
+        filter: drop-shadow(0 0 2em #ffe21c);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="grid grid-cols-5 h-screen bg-gradient-to-tr from-blue-400 to-blue-200 p-5" id="header">
+      <div class="col-span-4 p-3 bg-white rounded-l-xl shadow-xl">
+        <div class="mt-3 text-center relative">
+          <span id="setting_action" ondblclick="opensettings()" class="uppercase inline-block bg-gradient-to-br from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 rounded-full mx-auto px-4 font-medium text-white py-2 text-center shadow-md hover:shadow-xl transition-all">
+            Yami Alarm
+          </span>
+        </div>
+        <div class="text-center mt-4">
+          <div class="lg:text-9xl md:text-8xl sm:text-7xl text-6xl  bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 font-black inline-block drop-shadow-lg border-fuchsia-300 mx-auto text-center" id="clock">
+            04 : 03 : 30
+          </div>
+          <div id="list_alarm"></div>
+        </div>
+      </div>
+      <div class="p-3 bg-blue-800/30 backdrop-blur-md rounded-r-xl shadow-xl">
+        <div class="mt-4" id="settings">
+          <img src="/assets/logo.png" alt="logo"/>
+          <div class="mt-3 text-white stroke-orange-400 drop-shadow-md text-xl font-black text-center">
+            MTS SUNAN AMPEL KRATON PASURUAN
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fixed z-50 hidden" id="popup" style="bottom: 12px; right: 12px;">
+      <div class="bg-white rounded-lg shadow-2xl p-4 inline-block">
+          <div class="mb-3">
+            <label>Name</label>
+            <input type="text" name="name" id="nameInput" class="bg-white border-b-2 border-l-black px-4 py-2 w-100" placeholder="Nama Alarm"/>
+          </div>
+          <div class="mb-3">
+            <label>Waktu</label>
+            <input type="time" id="timeInput" class="bg-white border-b-2 border-l-black px-4 py-2 w-100" placeholder="Waktu"/>
+          </div>
+          <div class="mb-3">
+            <label>Audio</label>
+            <button class="bg-gray-300 rounded-full px-3 py-1 hover:bg-gray-200" id="open_audio">Open</button>
+            <div id="result_audio" class="truncate ... max-w-xs"></div>
+            
+          </div>
+          <div class="mb-3">
+            <button id="add_alarm" type="submit" class="bg-green-400 hover:bg-green-300 hover:text-green-950 text-green-200 rounded-lg shadow hover:shadow-xl transition-all px-4 py-2 font-bold active:shadow-sm">
+              Simpan
+            </button>
+          </div>
+      </div>
+    </div>
+
+    <button class="fixed z-50 bottom-10 right-10 place-items-center text-white font-medium bg-blue-600 rounded-lg shadow hover:shadow-xl transition-all px-4 py-2 text-md active:shadow-sm" id="popup_trigger">
+      + Tambah Alarm
+    </button>
+
+    <div class="fixed z-50 left-0 top-0 hidden" id="popup_full">
+      <div class="relative">
+        <div class="absolute right-8 top-7 bg-gray-100 cursor-pointer hover:bg-gray-300 px-3 pb-1 rounded-full" onclick="closesettings()" id="closepopup">x</div>
+      </div>
+      <div class="bg-blue-400/50 w-screen h-screen p-5">
+        <div class="bg-white rounded-lg p-5">
+          <div class="text-3xl font-semibold">Pengaturan</div>
+          <hr>
+          <div class="mt-4 flex align-middle place-items-center gap-4">
+            <label class="ml-4">1. Nama Lembaga/ Institusi</label>
+            <input type="text" class="px-5 py-3 border-2 border-x-0 border-t-0 bg-gray-100 hover:bg-blue-100 border-b-blue-600 w-64 nameInput" placeholder="name"/>
+            <span class="text-red-500"> Result : <span class="name"></span></span>
+          </div>
+          <div class="mt-4 flex align-middle place-items-center gap-4">
+            <label class="ml-4">2. Logo Lembaga/Institusi</label>
+            <input type="file" class="px-5 py-3 border-2 border-x-0 border-t-0 bg-gray-100 hover:bg-blue-100 border-b-blue-600 w-64 logoInput" placeholder="name"/>
+            <span class="text-red-500"> Result : <span class="logo"></span></span>
+          </div>
+          <div class="mt-4 flex align-middle place-items-center gap-4">
+            <label class="ml-4">3. Background Lembaga/Institusi</label>
+            <input type="file" class="px-5 py-3 border-2 border-x-0 border-t-0 bg-gray-100 hover:bg-blue-100 border-b-blue-600 w-64 bgInput" placeholder="name"/>
+            <span class="text-red-500"> Result : <span class="background"></span></span>
+          </div>
+
+          <div class="mt-4">
+            <button class="bg-blue-400 px-4 py-2 rounded-md hover:bg-blue-300 hover:shadow-lg transition-all active:bg-blue-500 active:shadow update_setting"> Update Settings</button>
+          </div>
+          <div class="mt-4 flex align-middle place-items-center gap-4">
+            <label class="ml-4">4. Alarm Path Folder ( folder tempat semua alarm )</label>
+            <button class="bg-blue-400 px-4 py-2 hover:bg-blue-300">Open</button>
+            <span class="text-red-500"> Result : <img src="" alt="logo"/></span>
+
+          </div>
+          <div class="grid grid-cols-7 text-center">
+            <div class="bg-gray-50 hover:bg-gray-100 border-1 border-gray-200 p-2"> 
+              <div class="font-medium">SENIN</div>
+              <ul class="text-left list-decimal list-full">
+                <li class="flex w-full"> 
+                  <div class="w-full">Jam pertama</div> 
+                  <div class="flex-none">
+                    <select class="w-16">
+                      <option selected>...</option>
+                      <option value="patnya"> path alarm.mp3 </option>
+                    </select>
+                  </div>
+                </li>
+              </ul> 
+            </div>
+            <div class="bg-gray-50 hover:bg-gray-100 border-1 border-gray-200 p-2"> Selasa </div>
+            <div class="bg-gray-50 hover:bg-gray-100 border-1 border-gray-200 p-2"> Rabu </div>
+            <div  class="bg-gray-50 hover:bg-gray-100 border-1 border-gray-200 p-2"> Kamis </div>
+            <div  class="bg-gray-50 hover:bg-gray-100 border-1 border-gray-200 p-2"> Jum'at </div>
+            <div  class="bg-gray-50 hover:bg-gray-100 border-1 border-gray-200 p-2"> Sabtu </div>
+            <div  class="bg-gray-50 hover:bg-gray-100 border-1 border-gray-200 p-2"> Minggu </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+
+    function opensettings() {
+      document.getElementById("popup_full").classList.remove("hidden")
+    }
+
+    function closesettings() {
+      document.getElementById("popup_full").classList.add("hidden")
+
+    }
+
+
+  </script>
+
+</html>
